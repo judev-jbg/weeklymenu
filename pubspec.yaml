@@ -1,0 +1,77 @@
+name: weekly_menu
+description: Aplicación de planificación de comidas
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  supabase_flutter: ^2.0.0
+  get: ^4.6.6
+  flutter_form_builder: ^10.2.0
+  form_builder_validators: ^11.1.2
+  timezone: ^0.10.0
+  flutter_dotenv: ^5.1.0
+
+  # Para notificaciones push
+  firebase_core: ^4.1.0
+  firebase_messaging: ^16.0.1
+  flutter_local_notifications: ^19.4.1
+
+  # Para manejo de fechas
+  intl: ^0.20.2
+
+  # Para iconos adicionales
+  flutter_svg: ^2.0.9
+
+  # Para reordenamiento de listas
+  reorderable_list: ^0.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
+
+# Configuración del icono
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/app_icon.png" # Ruta de tu icono
+  adaptive_icon_background: "FFE0BD55" # Color de fondo para Android adaptativo
+  adaptive_icon_foreground: "assets/images/app_icon_foreground.png" # Icono frontal para Android adaptativo
+
+flutter:
+  uses-material-design: true
+
+  # Configuración de assets
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/svg/
+    - .env
+
+  # Configuración de fuentes
+  fonts:
+    - family: CatleyaSignature
+      fonts:
+        - asset: assets/fonts/CatleyaSignature/CatleyaSignature.ttf
+    - family: Oswald
+      fonts:
+        - asset: assets/fonts/Oswald/Oswald-Regular.ttf
+        - asset: assets/fonts/Oswald/Oswald-Light.ttf
+          weight: 300
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat/Montserrat-Regular.ttf
+        - asset: assets/fonts/Montserrat/Montserrat-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Montserrat/Montserrat-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Montserrat/Montserrat-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Montserrat/Montserrat-Light.ttf
+          weight: 300

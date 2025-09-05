@@ -1,0 +1,171 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../controllers/notifications_controller.dart';
+import '../../data/models/notification_model.dart';
+
+/// Vista para mostrar las notificaciones del usuario
+class NotificationsView extends StatelessWidget {
+  const NotificationsView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<NotificationsController>(
+      init: NotificationsController(),
+      builder: (controller) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Notificaciones'),
+            actions: [
+              // Botón para marcar todas como leídas
+              Obx(() => controller.unreadCount.value > 0
+                  ? TextButton(
+                      onPressed: controller.markAllAsRead,
+                      child: const Text('Marcar todas'),
+                    )
+                  : const SizedBox.shrink()),
+            ],
+          ),
+          body: Obx(() {
+            if (controller.isLoading.value) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (controller.notifications.isEmpty) {
+              return _buildEmptyState(context);
+            }
+
+            return RefreshIndicator(
+              onRefresh: controller.refresh,
+              child: ListView.builder(
+                itemCount: controller.notifications.length,
+                itemBuilder: (context, index) {
+                  final notification = controller.notifications[index];
+                  return _buildNotificationCard(
+                      context, notification, controller);
+                },
+              ),
+            );
+          }),
+        );
+      },
+    );
+  }
+
+  /// Construye el estado vacío
+  Widget _buildEmptyState(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.notifications_none,
+            size: 80,
+            color: Colors.grey[400],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'No hay notificaciones',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: Colors.grey[600],
+                ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Te notificaremos cuando tengas menús pendientes',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Colors.grey[500],
+                ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Construye una card de notificación
+  Widget _buildNotificationCard(BuildContext context,
+      NotificationModel notification, NotificationsController controller) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: Card(
+        elevation: notification.isRead ? 1 : 3,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: ListTile(
+          contentPadding: const EdgeInsets.all(16),
+          leading: Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: notification.isRead
+                  ? Colors.grey[100]
+                  : Theme.of(context).primaryColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: Icon(
+              _getNotificationIcon(notification.type),
+              color: notification.isRead
+                  ? Colors.grey[600]
+                  : Theme.of(context).primaryColor,
+            ),
+          ),
+          title: Text(
+            notification.title,
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  fontWeight:
+                      notification.isRead ? FontWeight.w500 : FontWeight.w600,
+                  color: notification.isRead ? Colors.grey[700] : null,
+                ),
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 4),
+              Text(
+                notification.body,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: notification.isRead
+                          ? Colors.grey[600]
+                          : Colors.grey[700],
+                    ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                notification.timeAgo,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Colors.grey[500],
+                    ),
+              ),
+            ],
+          ),
+          trailing: !notification.isRead
+              ? Container(
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                )
+              : null,
+          onTap: () => controller.handleNotificationTap(notification),
+        ),
+      ),
+    );
+  }
+
+  /// Obtiene el icono según el tipo de notificación
+  IconData _getNotificationIcon(String type) {
+    switch (type) {
+      case 'menu_reminder':
+        return Icons.restaurant_menu;
+      case 'menu_followup':
+        return Icons.schedule;
+      default:
+        return Icons.notifications;
+    }
+  }
+}

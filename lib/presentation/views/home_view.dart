@@ -109,14 +109,16 @@ class HomeView extends StatelessWidget {
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-                Text(
-                  controller.firstName,
-                  style: TextStyle(
-                    color: Theme.of(Get.context!).colorScheme.onPrimary,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
+                Obx(
+                  () => Text(
+                    controller.firstName,
+                    style: TextStyle(
+                      color: Theme.of(Get.context!).colorScheme.onPrimary,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
-                ),
+                )
               ],
             ),
           ),
@@ -349,6 +351,7 @@ class HomeView extends StatelessWidget {
   Widget _buildTabContent(BuildContext context, HomeController controller) {
     return TabBarView(
       controller: controller.tabController,
+      physics: const NeverScrollableScrollPhysics(),
       children: [
         _buildMenuTab(context, controller),
         _buildShoppingTab(context, controller),
@@ -491,7 +494,6 @@ class HomeView extends StatelessWidget {
                 final item = controller.shoppingList[index];
                 return ShoppingItemCard(
                   item: item,
-                  onTogglePurchased: () => controller.toggleItemPurchased(item),
                   onRemove: () => controller.removeShoppingItem(item),
                 );
               },

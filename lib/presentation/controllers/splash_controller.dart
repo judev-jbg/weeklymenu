@@ -25,7 +25,7 @@ class SplashController extends GetxController with GetTickerProviderStateMixin {
   Completer<ConnectionStatus>? _connectionCompleter;
 
   // Duración de las animaciones
-  static const Duration animationDuration = Duration(seconds: 2);
+  static const Duration animationDuration = Duration(seconds: 1);
   static const Duration connectionTimeout = Duration(seconds: 8);
 
   @override

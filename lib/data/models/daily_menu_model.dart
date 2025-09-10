@@ -25,7 +25,7 @@ enum MenuStatus {
 /// Modelo para los menús asignados por día
 class DailyMenuModel {
   final String id;
-  final String userId;
+  final String? userId;
   final String? menuId;
   final DateTime date;
   final int dayIndex;
@@ -39,7 +39,7 @@ class DailyMenuModel {
 
   DailyMenuModel({
     required this.id,
-    required this.userId,
+    this.userId,
     this.menuId,
     required this.date,
     required this.dayIndex,
@@ -55,7 +55,7 @@ class DailyMenuModel {
   factory DailyMenuModel.fromJson(Map<String, dynamic> json) {
     return DailyMenuModel(
       id: json['id'] as String,
-      userId: json['user_id'] as String,
+      userId: json['user_id'] as String?,
       menuId: json['menu_id'] as String?,
       date: DateTime.parse(json['date'] as String),
       dayIndex: json['day_index'] as int,
@@ -70,6 +70,8 @@ class DailyMenuModel {
       updatedAt: DateTime.parse(json['updated_at'] as String),
     );
   }
+
+  String? get assignedByUserId => userId;
 
   /// Obtiene el nombre del día de la semana en español
   String get dayName {

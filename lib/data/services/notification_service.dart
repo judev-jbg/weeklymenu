@@ -108,7 +108,6 @@ class NotificationService {
             *,
             menu:menu_id(id, name, description)
           ''')
-          .eq('user_id', userId)
           .eq('status', 'pending')
           .gte('date', DateTime.now().toIso8601String().split('T')[0]);
 

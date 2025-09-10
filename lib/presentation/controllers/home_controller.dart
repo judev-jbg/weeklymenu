@@ -63,8 +63,7 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
     isLoading.value = true;
 
     try {
-      // Inicializar menús semanales si es necesario
-      await HomeService.initializeWeeklyMenus();
+      await _loadCurrentUserProfile();
 
       // Cargar datos
       await Future.wait([
@@ -75,6 +74,25 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
       Get.snackbar('Error', 'Error cargando datos: $e');
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  /// Carga el perfil del usuario actual
+  Future<void> _loadCurrentUserProfile() async {
+    try {
+      final userId = AuthService.supabaseClient.auth.currentUser?.id;
+
+      if (userId == null) return;
+
+      final response = await AuthService.supabaseClient
+          .from('user_profiles')
+          .select('*')
+          .eq('id', userId)
+          .single();
+
+      currentUser.value = UserModel.fromJson(response);
+    } catch (e) {
+      print('Error cargando perfil del usuario: $e');
     }
   }
 
@@ -229,7 +247,7 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
 
     try {
       // Guardar en base de datos
-      await HomeService.reorderDailyMenus(dailyMenus);
+      await HomeService.reorderDailyMenus(oldIndex, newIndex, dailyMenus);
     } catch (e) {
       // Revertir si falla
       final item = dailyMenus.removeAt(newIndex);
@@ -304,16 +322,6 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
     }
   }
 
-  /// Marca/desmarca un item como comprado
-  Future<void> toggleItemPurchased(ShoppingItemModel item) async {
-    try {
-      await HomeService.toggleShoppingItemPurchased(item.id, !item.isPurchased);
-      await loadShoppingList();
-    } catch (e) {
-      Get.snackbar('Error', 'Error actualizando item: $e');
-    }
-  }
-
   /// Elimina un item de la lista de compras
   Future<void> removeShoppingItem(ShoppingItemModel item) async {
     try {
@@ -353,8 +361,13 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
 
   /// Obtiene el primer nombre del usuario
   String get firstName {
-    // Por ahora usar email hasta implementar perfil completo
-    final email = currentUser.value?.email ?? 'Usuario';
+    final user = currentUser.value;
+    if (user?.firstName?.isNotEmpty == true) {
+      return user!.firstName!;
+    }
+
+    // Fallback al email si no hay nombre
+    final email = user?.email ?? 'Usuario';
     return StringExtension(email.split('@').first.split('.').first)
             .capitalize ??
         'Usuario';

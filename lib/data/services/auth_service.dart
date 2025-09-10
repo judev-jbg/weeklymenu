@@ -179,6 +179,8 @@ class AuthService {
   /// Verifica si hay un usuario autenticado
   static bool get isUserLoggedIn => _supabase.auth.currentUser != null;
 
+  static SupabaseClient get supabaseClient => _supabase;
+
   /// Registra un intento de login fallido
   static Future<void> _recordFailedAttempt(String email) async {
     try {

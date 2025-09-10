@@ -27,7 +27,9 @@ ALTER TABLE shopping_list ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Usuarios pueden ver todos los ingredientes" ON ingredients FOR SELECT USING (true);
 CREATE POLICY "Usuarios pueden crear ingredientes" ON ingredients FOR INSERT USING (true);
+CREATE POLICY "Usuarios pueden ver toda la lista de compras" ON shopping_list FOR SELECT USING (true);
 CREATE POLICY "Usuarios pueden gestionar su lista de compras" ON shopping_list FOR ALL USING (true);
+
 
 INSERT INTO ingredients (name, category) VALUES
 ('Pasta', 'Carbohidratos'),

@@ -6,7 +6,7 @@ class AppColors {
   // Colores principales
   static const Color primary = Color(0xFFE0BD55);
   static const Color primaryDark = Color(0xFFE0BD55);
-  static const Color primaryAcent = Color.fromARGB(255, 184, 155, 67);
+  static const Color primaryAcent = Color(0xFFB89B43);
   static const Color dark = Color(0xFF121212);
   static const Color onDark = Color(0xFFFFFFFF);
   static const Color secondary = Color(0xFF757575);

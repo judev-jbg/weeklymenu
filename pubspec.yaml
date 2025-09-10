@@ -29,6 +29,7 @@ dependencies:
 
   # Para reordenamiento de listas
   reorderable_list: ^0.0.1
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   flutter_test:
@@ -40,9 +41,9 @@ dev_dependencies:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/images/app_icon.png" # Ruta de tu icono
-  adaptive_icon_background: "FFE0BD55" # Color de fondo para Android adaptativo
-  adaptive_icon_foreground: "assets/images/app_icon_foreground.png" # Icono frontal para Android adaptativo
+  image_path: "assets/images/app_icon.png"
+  adaptive_icon_background: "#E0BD55"
+  adaptive_icon_foreground: "assets/images/app_icon_foreground.png"
 
 flutter:
   uses-material-design: true
@@ -50,7 +51,6 @@ flutter:
   # Configuración de assets
   assets:
     - assets/images/
-    - assets/icons/
     - assets/svg/
     - .env
 

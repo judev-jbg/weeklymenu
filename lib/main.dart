@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:weekly_menu/core/enums/connection_state.dart';
 import 'package:weekly_menu/data/services/connection_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'core/theme/app_theme.dart';
 import 'core/routes/app_routes.dart';
 import 'package:weekly_menu/core/routes/custom_transitions.dart';
@@ -45,6 +47,61 @@ void main() async {
     // Programar auto-completado de menús expirados
     await MenuManagementService.autoCompleteExpiredMenus();
     print('✅ Verificación de menús expirados completada');
+
+    Future<bool> checkIfNeedsManualReset() async {
+      try {
+        final now = DateTime.now();
+        final yesterday = now.subtract(const Duration(days: 1));
+
+        // Verificar si hay menús vencidos que no han sido reseteados
+        final response = await Supabase.instance.client
+            .from('daily_menus')
+            .select('id')
+            .lt('date', yesterday.toIso8601String().split('T')[0])
+            .eq('status', 'pending')
+            .not('menu_id', 'is', null)
+            .limit(1);
+
+        return response.isNotEmpty;
+      } catch (e) {
+        print('Error verificando necesidad de reset: $e');
+        return false;
+      }
+    }
+
+    /// Verificación de respaldo si el cron no funciona
+    Future<void> checkWeeklyResetBackup() async {
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final now = DateTime.now();
+
+        // Solo verificar si es viernes
+        if (now.weekday == DateTime.friday) {
+          final lastCheck = prefs.getString('last_reset_check');
+          final todayStr =
+              '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+
+          // Solo verificar una vez por día
+          if (lastCheck != todayStr) {
+            print('🔄 Verificando si el reset semanal se ejecutó...');
+
+            // Verificar si hay menús sin resetear que deberían haberse reseteado
+            final needsReset = await checkIfNeedsManualReset();
+
+            if (needsReset) {
+              print('⚠️  Ejecutando reset manual como respaldo...');
+              await Supabase.instance.client.rpc('weekly_menu_reset');
+            }
+
+            await prefs.setString('last_reset_check', todayStr);
+          }
+        }
+      } catch (e) {
+        print('Error en verificación de reset: $e');
+      }
+    }
+
+    await checkWeeklyResetBackup();
 
     print('🚀 Aplicación lista para ejecutar');
   } catch (e) {

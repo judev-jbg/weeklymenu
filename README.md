@@ -52,6 +52,6 @@ Aplicación móvil desarrollada en Flutter para la planificación semanal de men
 1. **Clonar el repositorio**
 
 ```bash
-git clone [url-del-repo]
+git clone https://github.com/judev-jbg/weeklymenu
 cd weekly_menu
 ```

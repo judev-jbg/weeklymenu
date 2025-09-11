@@ -87,7 +87,7 @@ class LoginUserView extends StatelessWidget {
     );
   }
 
-  /// Construye la sección inferior blanca con el formulario
+  /// Construye la sección inferior con el formulario
   Widget _buildBottomSection(
       BuildContext context, LoginUserController controller) {
     return Container(
@@ -349,7 +349,7 @@ class LoginUserView extends StatelessWidget {
             validator: controller.validateEmail,
             style: Theme.of(Get.context!).textTheme.labelMedium,
             decoration: const InputDecoration(
-              hintText: 'Ingrese su email',
+              hintText: 'Email',
               prefixIcon: Icon(Icons.email_outlined),
             ),
           ),
@@ -404,14 +404,8 @@ class LoginUserView extends StatelessWidget {
           Expanded(
             child: OutlinedButton(
               onPressed: controller.hideRegister,
-              style: OutlinedButton.styleFrom(
-                side: BorderSide(color: Colors.grey[400]!),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 16),
-              ),
-              child: const Text('Cancelar'),
+              style: Theme.of(Get.context!).outlinedButtonTheme.style,
+              child: Text('Cancelar'),
             ),
           ),
           const SizedBox(width: 16),

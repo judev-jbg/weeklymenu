@@ -248,7 +248,8 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.primary, width: 2),
+          borderSide:
+              const BorderSide(color: AppColors.lightTextPrimary, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -268,6 +269,17 @@ class AppTheme {
           ),
           padding: const EdgeInsets.symmetric(vertical: 16),
           textStyle: AppFonts.buttonTextLight.copyWith(color: Colors.white),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: AppColors.lightTextSecondary,
+          side: const BorderSide(color: AppColors.lightTextSecondary),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          textStyle: TextStyle(color: AppColors.lightTextSecondary),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
@@ -338,7 +350,8 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.primary, width: 2),
+          borderSide:
+              const BorderSide(color: AppColors.darkTextPrimary, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -358,6 +371,17 @@ class AppTheme {
           ),
           padding: const EdgeInsets.symmetric(vertical: 16),
           textStyle: AppFonts.buttonTextDark.copyWith(color: Colors.black),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: AppColors.darkTextSecondary,
+          side: const BorderSide(color: AppColors.darkTextSecondary),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          textStyle: TextStyle(color: AppColors.darkTextSecondary),
         ),
       ),
       textButtonTheme: TextButtonThemeData(

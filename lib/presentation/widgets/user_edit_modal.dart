@@ -15,7 +15,7 @@ class UserEditModal extends StatelessWidget {
     return AnimatedBottomSheet(
       isVisible: true,
       onDismiss: controller.closeUserModal,
-      initialChildSize: 0.85,
+      initialChildSize: 0.9,
       child: Form(
         key: controller.userFormKey,
         child: Padding(
@@ -44,10 +44,12 @@ class UserEditModal extends StatelessWidget {
                           controller: controller.userEmailController,
                           keyboardType: TextInputType.emailAddress,
                           validator: controller.validateEmail,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             labelText: 'Email',
                             hintText: 'usuario@ejemplo.com',
                             prefixIcon: Icon(Icons.email_outlined),
+                            labelStyle:
+                                Theme.of(Get.context!).textTheme.labelMedium,
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -63,10 +65,12 @@ class UserEditModal extends StatelessWidget {
                           controller: controller.userPasswordController,
                           obscureText: true,
                           validator: controller.validatePassword,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             labelText: 'Contraseña',
                             hintText: 'Mínimo 6 caracteres',
                             prefixIcon: Icon(Icons.lock_outlined),
+                            labelStyle:
+                                Theme.of(Get.context!).textTheme.labelMedium,
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -78,9 +82,10 @@ class UserEditModal extends StatelessWidget {
                 controller: controller.userFirstNameController,
                 validator: (value) =>
                     controller.validateRequired(value, 'el primer nombre'),
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Primer Nombre',
                   prefixIcon: Icon(Icons.person_outlined),
+                  labelStyle: Theme.of(Get.context!).textTheme.labelMedium,
                 ),
               ),
 
@@ -91,9 +96,10 @@ class UserEditModal extends StatelessWidget {
                 controller: controller.userLastNameController,
                 validator: (value) =>
                     controller.validateRequired(value, 'el apellido'),
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Apellido',
                   prefixIcon: Icon(Icons.person_outlined),
+                  labelStyle: Theme.of(Get.context!).textTheme.labelMedium,
                 ),
               ),
 
@@ -111,9 +117,14 @@ class UserEditModal extends StatelessWidget {
                     items: UserRole.values
                         .map((role) => DropdownMenuItem(
                               value: role,
-                              child: Text(role == UserRole.admin
-                                  ? 'Administrador'
-                                  : 'Usuario'),
+                              child: Text(
+                                role == UserRole.admin
+                                    ? 'Administrador'
+                                    : 'Usuario',
+                                style: Theme.of(Get.context!)
+                                    .textTheme
+                                    .labelMedium,
+                              ),
                             ))
                         .toList(),
                   )),

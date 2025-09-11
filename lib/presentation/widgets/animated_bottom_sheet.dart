@@ -117,7 +117,7 @@ class _AnimatedBottomSheetState extends State<AnimatedBottomSheet>
           children: [
             // Overlay SIN gesture detector - solo visual
             Container(
-              color: Colors.black54.withOpacity(_overlayAnimation.value * 0.5),
+              color: Colors.black54.withOpacity(_overlayAnimation.value * 0.6),
             ),
 
             // Sheet deslizable desde abajo

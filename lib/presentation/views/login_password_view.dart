@@ -216,10 +216,10 @@ class LoginPasswordView extends StatelessWidget {
         onPressed: controller.showPasswordReset,
         child: Text(
           '¿Has olvidado tu contraseña?',
-          style: Theme.of(Get.context!).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: Theme.of(Get.context!).primaryColor,
-              ),
+          style: TextStyle(
+            color: Theme.of(Get.context!).colorScheme.secondary,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
     );
@@ -248,16 +248,15 @@ class LoginPasswordView extends StatelessWidget {
         ));
   }
 
-  /// Construye el sheet de reset de contraseña
   /// Construye el sheet de reset de contraseña con animación suave
   Widget _buildPasswordResetSheet(
       BuildContext context, LoginPasswordController controller) {
     return Obx(() => AnimatedBottomSheet(
           isVisible: controller.showResetSheet.value,
           onDismiss: controller.hidePasswordReset,
-          initialChildSize: 0.6,
+          initialChildSize: 0.55,
           minChildSize: 0.4,
-          maxChildSize: 0.8,
+          maxChildSize: 0.6,
           animationDuration: const Duration(milliseconds: 450),
           child: Form(
             key: controller.resetFormKey,
@@ -390,7 +389,9 @@ class LoginPasswordView extends StatelessWidget {
                   ),
 
                   SizedBox(
-                      height: MediaQuery.of(context).viewInsets.bottom + 24),
+                      height: MediaQuery.of(context).viewInsets.bottom > 0
+                          ? 24
+                          : 0),
                 ],
               ),
             ),

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../controllers/settings_controller.dart';
 import '../widgets/user_edit_modal.dart';
 import '../../data/models/user_model.dart';
+import '../../core/theme/app_theme.dart';
 
 /// Tab para gestionar usuarios (solo admin)
 class UserListTab extends StatelessWidget {
@@ -12,63 +13,75 @@ class UserListTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<SettingsController>();
 
-    return Stack(
-      children: [
-        // Contenido principal
-        Column(
-          children: [
-            // Header con botón de agregar
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Gestión de Usuarios',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: controller.showCreateUserModal,
-                    icon: const Icon(Icons.add),
-                    label: const Text('Nuevo Usuario'),
-                  ),
-                ],
+    return Scaffold(
+      // FAB solo visible en tab Lista
+      floatingActionButton: Obx(() => controller.currentTabIndex.value > 0
+          ? FloatingActionButton(
+              onPressed: controller.showCreateUserModal,
+              backgroundColor: AppColors.primary,
+              child: const Icon(Icons.add, color: Colors.black),
+            )
+          : const SizedBox.shrink()),
+      body: Stack(
+        children: [
+          // Contenido principal
+          Column(
+            children: [
+              // Header con botón de agregar
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Gestión de Usuarios',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    // ElevatedButton.icon(
+                    //   onPressed: controller.showCreateUserModal,
+                    //   icon: const Icon(Icons.add),
+                    //   label: const Text('Nuevo Usuario'),
+                    // ),
+                  ],
+                ),
               ),
-            ),
 
-            // Lista de usuarios
-            Expanded(
-              child: Obx(() {
-                if (controller.isLoading.value) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+              // Lista de usuarios
+              Expanded(
+                child: Obx(() {
+                  if (controller.isLoading.value) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-                if (controller.users.isEmpty) {
-                  return const Center(
-                    child: Text('No hay usuarios registrados'),
+                  if (controller.users.isEmpty) {
+                    return const Center(
+                      child: Text('No hay usuarios registrados'),
+                    );
+                  }
+
+                  return ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: controller.users.length,
+                    itemBuilder: (context, index) {
+                      final user = controller.users[index];
+                      return _buildUserCard(context, controller, user);
+                    },
                   );
-                }
+                }),
+              ),
+            ],
+          ),
 
-                return ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: controller.users.length,
-                  itemBuilder: (context, index) {
-                    final user = controller.users[index];
-                    return _buildUserCard(context, controller, user);
-                  },
-                );
-              }),
-            ),
-          ],
-        ),
-
-        // Modal de usuario
-        Obx(() => controller.showUserModal.value
-            ? const UserEditModal()
-            : const SizedBox.shrink()),
-      ],
+          // Modal de usuario
+          Obx(() => controller.showUserModal.value
+              ? const UserEditModal()
+              : const SizedBox.shrink()),
+        ],
+      ),
     );
   }
 

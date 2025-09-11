@@ -158,7 +158,6 @@ class MenuManagementService {
             menu:menu_id(id, name, description, created_at, updated_at),
             actual_menu:actual_menu_id(id, name, description, created_at, updated_at)
           ''')
-          .eq('user_id', userId)
           .eq('status', 'pending')
           .lte('date', yesterday.toIso8601String().split('T')[0])
           .not('menu_id', 'is', null)
@@ -182,7 +181,6 @@ class MenuManagementService {
       final response = await _supabase
           .from('daily_menus')
           .select('id, date')
-          .eq('user_id', userId)
           .eq('status', 'pending')
           .lte('date', cutoffDate.toIso8601String().split('T')[0]);
 

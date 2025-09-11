@@ -27,7 +27,6 @@ class NotificationsController extends GetxController {
       final response = await _supabase
           .from('notifications')
           .select('*')
-          .eq('user_id', userId)
           .order('sent_at', ascending: false);
 
       final notificationList =
@@ -71,9 +70,7 @@ class NotificationsController extends GetxController {
 
       await _supabase
           .from('notifications')
-          .update({'is_read': true})
-          .eq('user_id', userId)
-          .eq('is_read', false);
+          .update({'is_read': true}).eq('is_read', false);
 
       // Actualizar localmente
       notifications.value =

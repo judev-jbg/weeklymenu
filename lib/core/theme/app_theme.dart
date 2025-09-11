@@ -16,7 +16,8 @@ class AppColors {
   // Tema claro
   static const Color lightBackground = Color(0xFFFFFFFF);
   static const Color lightSurface = Color(0xFFF8F9FA);
-  static const Color lightCardBackground = Color(0xFFFFFFFF);
+  static const Color lightCardBackground = Color(0xFFF1F1F1);
+  static const Color lightCardBackgroundFaint = Color(0xFFFAFAFA);
   static const Color lightTextPrimary = Color(0xFF212121);
   static const Color lightTextSecondary = Color(0xFF757575);
   static const Color lightTextHint = Color(0xFF9E9E9E);
@@ -27,15 +28,20 @@ class AppColors {
   // Tema oscuro
   static const Color darkBackground = Color(0xFF121212);
   static const Color darkSurface = Color(0xFF1E1E1E);
-  static const Color darkCardBackground = Color(0xFF444444);
+  static const Color darkCardBackground = Color(0xFF424242);
+  static const Color darkCardBackgroundFaint = Color(0xFF333333);
   static const Color darkTextPrimary = Color(0xFFFFFFFF);
-  static const Color darkTextSecondary = Color(0xFF757575);
+  static const Color darkTextSecondary = Color(0xFFADADAD);
   static const Color darkTextHint = Color(0xFF666666);
   static const Color darkDivider = Color(0xFF333333);
   static const Color darkInputBackground = Color(0xFF2C2C2C);
   static const Color darkInputBorder = Color(0xFF404040);
   static const Color darkError = Color(0xFFFF7369);
   static const Color lightError = Color(0xFFF44336);
+  static const Color darkSuccess = Color(0xFF70D373);
+  static const Color lightSuccess = Color(0xFF4CAA4F);
+  static const Color darkWarning = Color(0xFFFFB649);
+  static const Color lightWarning = Color(0xFFE28800);
 
   // Colores de estado
   static const Color success = Color(0xFF4CAF50);
@@ -205,6 +211,8 @@ class AppTheme {
         surface: AppColors.lightSurface,
         background: AppColors.lightBackground,
         error: AppColors.lightError,
+        scrim: AppColors.lightSuccess,
+        surfaceVariant: AppColors.lightWarning,
         onPrimary: Colors.black,
         onSecondary: Colors.white,
         onSurface: AppColors.lightTextPrimary,
@@ -219,7 +227,8 @@ class AppTheme {
       ),
       cardTheme: CardThemeData(
         color: AppColors.lightCardBackground,
-        elevation: 2,
+        surfaceTintColor: AppColors.lightCardBackgroundFaint,
+        elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
@@ -292,6 +301,8 @@ class AppTheme {
         surface: AppColors.darkSurface,
         background: AppColors.darkBackground,
         error: AppColors.darkError,
+        scrim: AppColors.darkSuccess,
+        surfaceVariant: AppColors.darkWarning,
         onPrimary: Colors.black,
         onSecondary: Colors.white,
         onSurface: AppColors.darkTextPrimary,
@@ -306,7 +317,8 @@ class AppTheme {
       ),
       cardTheme: CardThemeData(
         color: AppColors.darkCardBackground,
-        elevation: 3,
+        surfaceTintColor: AppColors.darkCardBackgroundFaint,
+        elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),

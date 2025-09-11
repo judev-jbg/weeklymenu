@@ -68,6 +68,7 @@ class SplashView extends StatelessWidget {
         Text(
           'Weekly',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: Colors.grey[600],
                 height: 0.8,
               ),
           textAlign: TextAlign.center,
@@ -76,6 +77,7 @@ class SplashView extends StatelessWidget {
         Text(
           'Menu',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: Colors.grey[600],
                 height: 0.9,
               ),
           textAlign: TextAlign.center,
@@ -149,7 +151,10 @@ class SplashView extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 40),
       child: Text(
         '¡Sabor planificado, caos eliminado!',
-        style: Theme.of(context).textTheme.displaySmall,
+        style: Theme.of(context)
+            .textTheme
+            .displaySmall
+            ?.copyWith(color: Colors.grey[600]),
         textAlign: TextAlign.center,
       ),
     );

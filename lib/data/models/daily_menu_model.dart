@@ -4,7 +4,9 @@ import 'package:weekly_menu/data/models/menu_model.dart';
 enum MenuStatus {
   pending('pending'),
   completed('completed'),
-  notCompleted('not_completed');
+  notCompleted('not_completed'),
+  unassigned('unassigned'),
+  expired('expired');
 
   const MenuStatus(this.value);
   final String value;
@@ -16,8 +18,12 @@ enum MenuStatus {
       case 'not_completed':
         return MenuStatus.notCompleted;
       case 'pending':
-      default:
         return MenuStatus.pending;
+      case 'expired':
+        return MenuStatus.expired;
+      case 'unassigned':
+      default:
+        return MenuStatus.unassigned;
     }
   }
 }
@@ -114,7 +120,7 @@ class DailyMenuModel {
 
   /// Obtiene el título para mostrar
   String get displayTitle {
-    if (!hasMenuAssigned) {
+    if (!hasMenuAssigned && status == MenuStatus.unassigned) {
       return 'Toca 2 veces para asignar un menú a este día';
     }
 
@@ -124,7 +130,11 @@ class DailyMenuModel {
       case MenuStatus.notCompleted:
         return actualMenu?.name ?? menu?.name ?? 'Menú no completado';
       case MenuStatus.pending:
-        return menu?.name ?? 'Menú asignado';
+        return menu?.name ?? 'Menú pendiente';
+      case MenuStatus.expired:
+        return menu?.name ?? 'No se asignó ningún menú';
+      case MenuStatus.unassigned:
+        return menu?.name ?? 'Asignar menú';
     }
   }
 }

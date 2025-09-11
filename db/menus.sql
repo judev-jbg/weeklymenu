@@ -9,7 +9,7 @@ CREATE TABLE menus (
 );
 
 -- Crear enum para estados de menú asignado
-CREATE TYPE menu_status AS ENUM ('pending', 'completed', 'not_completed');
+CREATE TYPE menu_status AS ENUM ('pending', 'completed', 'not_completed','unassigned');
 
 -- Crear tabla de menús asignados por día
 CREATE TABLE daily_menus (
@@ -18,7 +18,7 @@ CREATE TABLE daily_menus (
   menu_id UUID REFERENCES menus(id) ON DELETE CASCADE,
   date DATE NOT NULL,
   day_index INTEGER NOT NULL, -- 0=sábado, 1=domingo, ..., 8=domingo siguiente
-  status menu_status DEFAULT 'pending',
+  status menu_status DEFAULT 'unassigned',
   actual_menu_id UUID REFERENCES menus(id) ON DELETE SET NULL, -- menú real consumido si no cumplió
   order_position INTEGER NOT NULL DEFAULT 0,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,

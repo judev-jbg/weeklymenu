@@ -67,8 +67,9 @@ class HomeService {
       final userId = _supabase.auth.currentUser?.id;
 
       await _supabase.from('daily_menus').update({
-        'menu_id': menuId,
         'user_id': userId, // Registrar quién hizo la asignación
+        'menu_id': menuId,
+        'status': 'pending',
         'updated_at': DateTime.now().toIso8601String(),
       }).eq('id', dailyMenuId);
     } catch (e) {

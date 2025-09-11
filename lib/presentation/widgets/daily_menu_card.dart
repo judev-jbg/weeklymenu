@@ -16,25 +16,33 @@ class DailyMenuCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isCompleted = dailyMenu.status != MenuStatus.pending;
-
+    final isCompleted = dailyMenu.status != MenuStatus.unassigned;
+    final hasMenuAssigned = dailyMenu.hasMenuAssigned;
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       child: GestureDetector(
         onDoubleTap: isCompleted ? null : onDoubleTap,
         child: Card(
-          elevation: 2,
+          elevation: dailyMenu.status == MenuStatus.completed ||
+                  dailyMenu.status == MenuStatus.expired
+              ? 1.0
+              : 2.0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
+          color: dailyMenu.status == MenuStatus.completed ||
+                  dailyMenu.status == MenuStatus.expired
+              ? Theme.of(context).cardTheme.surfaceTintColor
+              : Theme.of(context).cardTheme.color,
           child: Container(
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              color: isCompleted
-                  ? Theme.of(context).cardColor.withOpacity(0.5)
-                  : Theme.of(context).cardColor,
-            ),
+            // decoration: BoxDecoration(
+            //   borderRadius: BorderRadius.circular(16),
+            //   color: dailyMenu.status == MenuStatus.completed ||
+            //           dailyMenu.status == MenuStatus.expired
+            //       ? Theme.of(context).cardTheme.color
+            //       : Theme.of(context).cardTheme.color?.withOpacity(0.2),
+            // ),
             child: Row(
               children: [
                 // Indicador de día
@@ -42,14 +50,20 @@ class DailyMenuCard extends StatelessWidget {
                   width: 60,
                   height: 60,
                   decoration: BoxDecoration(
-                    color: _getDayColor(),
+                    color: dailyMenu.status == MenuStatus.completed ||
+                            dailyMenu.status == MenuStatus.expired
+                        ? _getDayColor().withOpacity(0.2)
+                        : _getDayColor(),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(
                     child: Text(
                       dailyMenu.dayName,
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: dailyMenu.status == MenuStatus.completed ||
+                                dailyMenu.status == MenuStatus.expired
+                            ? Colors.white.withOpacity(0.5)
+                            : Colors.white,
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
                       ),
@@ -69,11 +83,30 @@ class DailyMenuCard extends StatelessWidget {
                         dailyMenu.displayTitle,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                               fontWeight: FontWeight.w600,
-                              decoration: isCompleted
-                                  ? TextDecoration.lineThrough
-                                  : null,
-                              color: isCompleted
-                                  ? Colors.grey[600]
+                              decoration:
+                                  dailyMenu.status == MenuStatus.completed ||
+                                          dailyMenu.status == MenuStatus.expired
+                                      ? TextDecoration.lineThrough
+                                      : null,
+                              decorationColor:
+                                  dailyMenu.status == MenuStatus.completed ||
+                                          dailyMenu.status == MenuStatus.expired
+                                      ? Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge
+                                          ?.color
+                                          ?.withOpacity(0.8)
+                                      : Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge
+                                          ?.color,
+                              color: dailyMenu.status == MenuStatus.completed ||
+                                      dailyMenu.status == MenuStatus.expired
+                                  ? Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.color
+                                      ?.withOpacity(0.5)
                                   : Theme.of(context)
                                       .textTheme
                                       .bodyLarge
@@ -89,35 +122,64 @@ class DailyMenuCard extends StatelessWidget {
                       Text(
                         dailyMenu.formattedDate,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.grey[600],
-                              fontSize: 13,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.color
+                                  ?.withOpacity((dailyMenu.status ==
+                                                  MenuStatus.completed ||
+                                              dailyMenu.status ==
+                                                  MenuStatus.expired)
+                                          ? 0.6 // Opacidad reducida para estados completed/expired
+                                          : 1.0 // Opacidad completa para otros estados
+                                      ),
                             ),
                       ),
 
                       // Estado si está completado
-                      if (isCompleted) ...[
+                      if (isCompleted && hasMenuAssigned) ...[
                         const SizedBox(height: 4),
                         Row(
                           children: [
                             Icon(
-                              dailyMenu.status == MenuStatus.completed
-                                  ? Icons.check_circle
-                                  : Icons.cancel,
-                              size: 16,
-                              color: dailyMenu.status == MenuStatus.completed
-                                  ? Colors.green
-                                  : Colors.orange,
-                            ),
+                                dailyMenu.status == MenuStatus.completed
+                                    ? Icons.check_circle
+                                    : Icons.watch_later_outlined,
+                                size: 16,
+                                color: dailyMenu.status == MenuStatus.completed
+                                    ? Theme.of(context)
+                                        .colorScheme
+                                        .scrim
+                                        .withOpacity(0.5)
+                                    : Theme.of(context)
+                                        .colorScheme
+                                        .surfaceVariant),
                             const SizedBox(width: 4),
                             Text(
-                              dailyMenu.status == MenuStatus.completed
-                                  ? 'Cumplido'
-                                  : 'No cumplido',
+                              () {
+                                switch (dailyMenu.status) {
+                                  case MenuStatus.completed:
+                                    return 'Cumplido';
+                                  case MenuStatus.notCompleted:
+                                    return 'No cumplido';
+                                  case MenuStatus.pending:
+                                    return 'Pendiente';
+                                  case MenuStatus.expired:
+                                    return '';
+                                  default:
+                                    return 'Desconocido';
+                                }
+                              }(),
                               style: TextStyle(
                                 fontSize: 12,
                                 color: dailyMenu.status == MenuStatus.completed
-                                    ? Colors.green
-                                    : Colors.orange,
+                                    ? Theme.of(context)
+                                        .colorScheme
+                                        .scrim
+                                        .withOpacity(0.5)
+                                    : Theme.of(context)
+                                        .colorScheme
+                                        .surfaceVariant,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -145,21 +207,24 @@ class DailyMenuCard extends StatelessWidget {
   /// Obtiene el color según el día de la semana
   Color _getDayColor() {
     switch (dailyMenu.dayIndex) {
-      case 0: // Sábado
-      case 8: // Domingo siguiente
-        return Colors.purple;
+      case 0: // Sábado anterior
+        return const Color(0xFFBA52CC);
       case 1: // Domingo
-        return Colors.red;
+        return const Color(0xFFCA4C43);
       case 2: // Lunes
-        return Colors.blue;
+        return const Color(0xFF3D96DF);
       case 3: // Martes
-        return Colors.green;
+        return const Color(0xFF5EB961);
       case 4: // Miércoles
-        return Colors.orange;
+        return const Color(0xFFE9A034);
       case 5: // Jueves
-        return Colors.teal;
+        return const Color(0xFF2AAC9F);
       case 6: // Viernes
-        return Colors.indigo;
+        return const Color(0xFF5B6EDD);
+      case 7: // Viernes
+        return const Color.fromARGB(255, 161, 69, 130);
+      case 8: // Viernes
+        return const Color.fromARGB(255, 211, 209, 79);
       default:
         return Colors.grey;
     }

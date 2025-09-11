@@ -34,7 +34,7 @@ class HomeView extends StatelessWidget {
               // Contenido principal
               Column(
                 children: [
-                  // Header y tabs con fondo negro y esquinas redondeadas
+                  // Header y tabs con esquinas redondeadas
                   ClipRRect(
                     borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(25),

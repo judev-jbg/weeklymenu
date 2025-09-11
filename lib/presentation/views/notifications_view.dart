@@ -13,41 +13,100 @@ class NotificationsView extends StatelessWidget {
       init: NotificationsController(),
       builder: (controller) {
         return Scaffold(
-          appBar: AppBar(
-            title: const Text('Notificaciones'),
-            actions: [
-              // Botón para marcar todas como leídas
-              Obx(() => controller.unreadCount.value > 0
-                  ? TextButton(
-                      onPressed: controller.markAllAsRead,
-                      child: const Text('Marcar todas'),
-                    )
-                  : const SizedBox.shrink()),
+          body: Column(
+            children: [
+              // Header con fondo negro y esquinas redondeadas
+              ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(25),
+                  bottomRight: Radius.circular(25),
+                ),
+                child: Container(
+                  color: Theme.of(Get.context!).primaryColor,
+                  child: SafeArea(
+                    bottom: false, // No aplicar SafeArea en la parte inferior
+                    child: _buildHeader(context, controller),
+                  ),
+                ),
+              ),
+
+              // Contenido de notificaciones
+              Expanded(
+                child: Obx(() {
+                  if (controller.isLoading.value) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (controller.notifications.isEmpty) {
+                    return _buildEmptyState(context);
+                  }
+
+                  return RefreshIndicator(
+                    onRefresh: controller.refresh,
+                    child: ListView.builder(
+                      itemCount: controller.notifications.length,
+                      itemBuilder: (context, index) {
+                        final notification = controller.notifications[index];
+                        return _buildNotificationCard(
+                            context, notification, controller);
+                      },
+                    ),
+                  );
+                }),
+              ),
             ],
           ),
-          body: Obx(() {
-            if (controller.isLoading.value) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            if (controller.notifications.isEmpty) {
-              return _buildEmptyState(context);
-            }
-
-            return RefreshIndicator(
-              onRefresh: controller.refresh,
-              child: ListView.builder(
-                itemCount: controller.notifications.length,
-                itemBuilder: (context, index) {
-                  final notification = controller.notifications[index];
-                  return _buildNotificationCard(
-                      context, notification, controller);
-                },
-              ),
-            );
-          }),
         );
       },
+    );
+  }
+
+  /// Construye el header superior
+  Widget _buildHeader(
+      BuildContext context, NotificationsController controller) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Botón de regreso
+          IconButton(
+            onPressed: () => Get.back(),
+            icon: Icon(
+              Icons.arrow_back,
+              color: Theme.of(Get.context!).colorScheme.onPrimary,
+              size: 24,
+            ),
+          ),
+
+          // Título
+          Expanded(
+            child: Text(
+              'Notificaciones',
+              style: TextStyle(
+                color: Theme.of(Get.context!).colorScheme.onPrimary,
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+
+          // Botón marcar todas como leídas
+          Obx(() => controller.unreadCount.value == 0
+              ? TextButton(
+                  onPressed: controller.markAllAsRead,
+                  child: Text(
+                    'Marcar todas',
+                    style: TextStyle(
+                      color: Theme.of(Get.context!).colorScheme.onPrimary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                )
+              : const SizedBox(
+                  width: 48)), // Espaciado para mantener centrado el título
+        ],
+      ),
     );
   }
 
@@ -71,7 +130,7 @@ class NotificationsView extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Te notificaremos cuando tengas menús pendientes',
+            'Te notificaremos cuando tengas algo nuevo.',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Colors.grey[500],
                 ),

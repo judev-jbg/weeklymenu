@@ -42,7 +42,7 @@ class AppRoutes {
       customTransition: CustomTransitions.fadeSlide,
     ),
     GetPage(
-      name: notifications,
+      name: menuManagement,
       page: () => const MenuManagementView(),
       // transition: Transition.custom,
       customTransition: CustomTransitions.slideFromRight,

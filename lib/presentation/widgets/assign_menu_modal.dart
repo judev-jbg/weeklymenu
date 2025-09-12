@@ -31,7 +31,7 @@ class AssignMenuModal extends StatelessWidget {
             Text(
               isEdit ? 'Editar menú' : 'Asigna un menú',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w600,
                   ),
             ),
 
@@ -41,6 +41,7 @@ class AssignMenuModal extends StatelessWidget {
             TextField(
               controller: controller.menuSearchController,
               onChanged: controller.searchMenus,
+              style: Theme.of(Get.context!).textTheme.labelMedium,
               decoration: InputDecoration(
                 hintText: 'Buscar menú...',
                 prefixIcon: const Icon(Icons.search),
@@ -56,27 +57,22 @@ class AssignMenuModal extends StatelessWidget {
             // Lista de resultados
             Expanded(
               child: Obx(() {
-                if (controller.menuSearchQuery.value.isEmpty) {
-                  return Center(
-                    child: Text(
-                      'Ingrese el nombre del menú para buscar',
-                      style: Theme.of(Get.context!).textTheme.labelMedium,
-                    ),
-                  );
-                }
-
                 return Column(
+                  verticalDirection: VerticalDirection.up,
                   children: [
                     // Opción para crear nuevo menú si no hay coincidencias exactas
-                    if (controller.menuSearchResults.isEmpty ||
-                        !controller.menuSearchResults.any((menu) =>
-                            menu.name.toLowerCase() ==
-                            controller.menuSearchQuery.value.toLowerCase()))
+                    if (controller.menuSearchQuery.value.isNotEmpty &&
+                        (controller.menuSearchResults.isEmpty ||
+                            !controller.menuSearchResults.any((menu) =>
+                                menu.name.toLowerCase() ==
+                                controller.menuSearchQuery.value
+                                    .toLowerCase())))
                       _buildCreateOption(context, controller),
 
                     // Lista de menús existentes
                     Expanded(
                       child: ListView.builder(
+                        padding: const EdgeInsets.all(0),
                         itemCount: controller.menuSearchResults.length,
                         itemBuilder: (context, index) {
                           final menu = controller.menuSearchResults[index];
@@ -84,27 +80,34 @@ class AssignMenuModal extends StatelessWidget {
                               controller.selectedMenu.value?.id == menu.id;
 
                           return Column(children: [
-                            ListTile(
-                              title: Text(menu.name,
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.w500)),
-                              subtitle: menu.description != null
-                                  ? Text(menu.description!)
-                                  : null,
-                              selected: isSelected,
-                              selectedTileColor: Theme.of(context)
-                                  .primaryColor
-                                  .withOpacity(0.1),
-                              onTap: () => controller.selectedMenu.value = menu,
-                              trailing:
-                                  isSelected ? const Icon(Icons.check) : null,
+                            Material(
+                              color: Theme.of(context)
+                                  .cardTheme
+                                  .color
+                                  ?.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(8),
+                              child: ListTile(
+                                title: Text(menu.name,
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500)),
+                                subtitle: menu.description != null
+                                    ? Text(menu.description!)
+                                    : null,
+                                selected: isSelected,
+                                selectedTileColor: Theme.of(context)
+                                    .primaryColor
+                                    .withOpacity(0.1),
+                                onTap: () =>
+                                    controller.selectedMenu.value = menu,
+                                trailing:
+                                    isSelected ? const Icon(Icons.check) : null,
+                              ),
                             ),
                             Divider(
                               color: Theme.of(context)
                                   .colorScheme
-                                  .secondary
-                                  .withOpacity(0.5), // Color de la línea
-                              height: 20, // Espacio vertical total
+                                  .background, // Color de la línea
+                              height: 10, // Espacio vertical total
                               thickness: 1, // Grosor de la línea
                               indent: 20, // Sangría izquierda
                               endIndent: 20, // Sangría derecha
@@ -163,7 +166,7 @@ class AssignMenuModal extends StatelessWidget {
   /// Construye la opción para crear un nuevo menú
   Widget _buildCreateOption(BuildContext context, HomeController controller) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: 5, top: 8),
       child: ListTile(
         leading: Container(
           width: 40,
@@ -177,11 +180,10 @@ class AssignMenuModal extends StatelessWidget {
             color: Theme.of(context).primaryColor,
           ),
         ),
-        title: Obx(() => Text(
-            '+ Crear "${controller.menuSearchQuery.value}" en la lista de menús y asignarlo al día')),
+        title: Obx(() =>
+            Text('Crear "${controller.menuSearchQuery.value}" y asignar')),
         onTap: () =>
             controller.createAndAssignMenu(controller.menuSearchQuery.value),
-        tileColor: Colors.grey[50],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),

@@ -14,7 +14,7 @@ class AddIngredientModal extends StatelessWidget {
     return AnimatedBottomSheet(
       isVisible: true,
       onDismiss: () => controller.showShoppingModal.value = false,
-      initialChildSize: 0.8,
+      initialChildSize: 0.9,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
@@ -22,9 +22,9 @@ class AddIngredientModal extends StatelessWidget {
           children: [
             // Título
             Text(
-              'Agregar ingrediente',
+              'Agregar a la lista',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w600,
                   ),
             ),
 
@@ -50,28 +50,23 @@ class AddIngredientModal extends StatelessWidget {
             // Lista de resultados
             Expanded(
               child: Obx(() {
-                if (controller.ingredientSearchQuery.value.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      'Ingrese el nombre del ingrediente para buscar',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  );
-                }
-
                 return Column(
+                  verticalDirection: VerticalDirection.up,
                   children: [
                     // Opción para crear nuevo ingrediente
-                    if (controller.ingredientSearchResults.isEmpty ||
-                        !controller.ingredientSearchResults.any((ingredient) =>
-                            ingredient.name.toLowerCase() ==
-                            controller.ingredientSearchQuery.value
-                                .toLowerCase()))
+                    if (controller.ingredientSearchQuery.value.isNotEmpty &&
+                        (controller.ingredientSearchResults.isEmpty ||
+                            !controller.ingredientSearchResults.any(
+                                (ingredient) =>
+                                    ingredient.name.toLowerCase() ==
+                                    controller.ingredientSearchQuery.value
+                                        .toLowerCase())))
                       _buildCreateOption(context, controller),
 
                     // Lista de ingredientes existentes
                     Expanded(
                       child: ListView.builder(
+                        padding: const EdgeInsets.all(0),
                         itemCount: controller.ingredientSearchResults.length,
                         itemBuilder: (context, index) {
                           final ingredient =
@@ -80,19 +75,40 @@ class AddIngredientModal extends StatelessWidget {
                               controller.selectedIngredient.value?.id ==
                                   ingredient.id;
 
-                          return ListTile(
-                            title: Text(ingredient.name),
-                            subtitle: ingredient.category != null
-                                ? Text(ingredient.category!)
-                                : null,
-                            selected: isSelected,
-                            selectedTileColor:
-                                Theme.of(context).primaryColor.withOpacity(0.1),
-                            onTap: () => controller.selectedIngredient.value =
-                                ingredient,
-                            trailing:
-                                isSelected ? const Icon(Icons.check) : null,
-                          );
+                          return Column(children: [
+                            Material(
+                              color: Theme.of(context)
+                                  .cardTheme
+                                  .color
+                                  ?.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(8),
+                              child: ListTile(
+                                title: Text(ingredient.name,
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500)),
+                                subtitle: ingredient.category != null
+                                    ? Text(ingredient.category!)
+                                    : null,
+                                selected: isSelected,
+                                selectedTileColor: Theme.of(context)
+                                    .primaryColor
+                                    .withOpacity(0.1),
+                                onTap: () => controller
+                                    .selectedIngredient.value = ingredient,
+                                trailing:
+                                    isSelected ? const Icon(Icons.check) : null,
+                              ),
+                            ),
+                            Divider(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .background, // Color de la línea
+                              height: 10, // Espacio vertical total
+                              thickness: 1, // Grosor de la línea
+                              indent: 20, // Sangría izquierda
+                              endIndent: 20, // Sangría derecha
+                            ),
+                          ]);
                         },
                       ),
                     ),
@@ -146,7 +162,7 @@ class AddIngredientModal extends StatelessWidget {
   /// Construye la opción para crear un nuevo ingrediente
   Widget _buildCreateOption(BuildContext context, HomeController controller) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: 5, top: 8),
       child: ListTile(
         leading: Container(
           width: 40,
@@ -161,13 +177,9 @@ class AddIngredientModal extends StatelessWidget {
           ),
         ),
         title: Obx(() => Text(
-            '+ Crear "${controller.ingredientSearchQuery.value}" en la lista de ingredientes e insumos y agregar a la lista actual')),
+            'Crear "${controller.ingredientSearchQuery.value}" y agregar a la lista')),
         onTap: () => controller
             .createAndAddIngredient(controller.ingredientSearchQuery.value),
-        tileColor: Colors.grey[50],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
       ),
     );
   }

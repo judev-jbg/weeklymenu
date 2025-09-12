@@ -120,9 +120,9 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
   void handleDailyMenuDoubleTap(DailyMenuModel dailyMenu) {
     selectedDailyMenu.value = dailyMenu;
 
-    if (dailyMenu.hasMenuAssigned) {
+    if (dailyMenu.status == MenuStatus.pending) {
       _showEditMenuDialog();
-    } else {
+    } else if (dailyMenu.status == MenuStatus.unassigned) {
       _showAssignMenuModal();
     }
   }

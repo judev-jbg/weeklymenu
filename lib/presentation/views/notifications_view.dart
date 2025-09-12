@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../controllers/notifications_controller.dart';
 import '../../data/models/notification_model.dart';
@@ -15,17 +16,24 @@ class NotificationsView extends StatelessWidget {
         return Scaffold(
           body: Column(
             children: [
-              // Header con fondo negro y esquinas redondeadas
-              ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(25),
-                  bottomRight: Radius.circular(25),
+              AnnotatedRegion<SystemUiOverlayStyle>(
+                value: SystemUiOverlayStyle(
+                  statusBarColor: Theme.of(Get.context!)
+                      .primaryColor, // Mismo color que tu container
+                  statusBarBrightness: Brightness.dark, // Para iOS
+                  statusBarIconBrightness: Brightness
+                      .dark, // Color de los iconos (claro sobre fondo dorado)
                 ),
-                child: Container(
-                  color: Theme.of(Get.context!).primaryColor,
-                  child: SafeArea(
-                    bottom: false, // No aplicar SafeArea en la parte inferior
-                    child: _buildHeader(context, controller),
+                // Header con fondo y esquinas redondeadas
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(40),
+                  child: Container(
+                    color: Theme.of(Get.context!).primaryColor,
+                    child: SafeArea(
+                      bottom: false, // No aplicar SafeArea en la parte inferior
+
+                      child: _buildHeader(context, controller),
+                    ),
                   ),
                 ),
               ),
@@ -65,7 +73,7 @@ class NotificationsView extends StatelessWidget {
   Widget _buildHeader(
       BuildContext context, NotificationsController controller) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.only(left: 16, right: 16, top: 30, bottom: 22),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -92,7 +100,7 @@ class NotificationsView extends StatelessWidget {
           ),
 
           // Botón marcar todas como leídas
-          Obx(() => controller.unreadCount.value == 0
+          Obx(() => controller.unreadCount.value > 0
               ? TextButton(
                   onPressed: controller.markAllAsRead,
                   child: Text(

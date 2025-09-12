@@ -140,7 +140,9 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
   void _showEditMenuDialog() {
     Get.dialog(
       AlertDialog(
+        icon: const Icon(Icons.info_outline, color: Colors.orange),
         title: const Text('Menú Asignado'),
+        backgroundColor: Theme.of(Get.context!).cardTheme.color,
         content: const Text(
             'Ya existe un menú asignado para este día ¿Desea cambiar de menú?'),
         actions: [
@@ -153,6 +155,10 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
               Get.back();
               _showEditMenuModal();
             },
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+                padding: EdgeInsetsGeometry.only(left: 15, right: 15)),
             child: const Text('Editar'),
           ),
         ],

@@ -21,7 +21,10 @@ class DailyMenuCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       child: GestureDetector(
-        onDoubleTap: isCompleted ? null : onDoubleTap,
+        onDoubleTap: (dailyMenu.status == MenuStatus.expired ||
+                dailyMenu.status == MenuStatus.completed)
+            ? null
+            : onDoubleTap,
         child: Card(
           elevation: dailyMenu.status == MenuStatus.completed ||
                   dailyMenu.status == MenuStatus.expired

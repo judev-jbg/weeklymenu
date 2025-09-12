@@ -21,7 +21,7 @@ class AssignMenuModal extends StatelessWidget {
     return AnimatedBottomSheet(
       isVisible: true,
       onDismiss: onClose,
-      initialChildSize: 0.8,
+      initialChildSize: 0.9,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
@@ -57,10 +57,10 @@ class AssignMenuModal extends StatelessWidget {
             Expanded(
               child: Obx(() {
                 if (controller.menuSearchQuery.value.isEmpty) {
-                  return const Center(
+                  return Center(
                     child: Text(
                       'Ingrese el nombre del menú para buscar',
-                      style: TextStyle(color: Colors.grey),
+                      style: Theme.of(Get.context!).textTheme.labelMedium,
                     ),
                   );
                 }
@@ -83,18 +83,33 @@ class AssignMenuModal extends StatelessWidget {
                           final isSelected =
                               controller.selectedMenu.value?.id == menu.id;
 
-                          return ListTile(
-                            title: Text(menu.name),
-                            subtitle: menu.description != null
-                                ? Text(menu.description!)
-                                : null,
-                            selected: isSelected,
-                            selectedTileColor:
-                                Theme.of(context).primaryColor.withOpacity(0.1),
-                            onTap: () => controller.selectedMenu.value = menu,
-                            trailing:
-                                isSelected ? const Icon(Icons.check) : null,
-                          );
+                          return Column(children: [
+                            ListTile(
+                              title: Text(menu.name,
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.w500)),
+                              subtitle: menu.description != null
+                                  ? Text(menu.description!)
+                                  : null,
+                              selected: isSelected,
+                              selectedTileColor: Theme.of(context)
+                                  .primaryColor
+                                  .withOpacity(0.1),
+                              onTap: () => controller.selectedMenu.value = menu,
+                              trailing:
+                                  isSelected ? const Icon(Icons.check) : null,
+                            ),
+                            Divider(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .secondary
+                                  .withOpacity(0.5), // Color de la línea
+                              height: 20, // Espacio vertical total
+                              thickness: 1, // Grosor de la línea
+                              indent: 20, // Sangría izquierda
+                              endIndent: 20, // Sangría derecha
+                            ),
+                          ]);
                         },
                       ),
                     ),

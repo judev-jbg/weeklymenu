@@ -37,7 +37,7 @@ class HomeService {
         ''')
           .gte('date', viewDates.start.toIso8601String().split('T')[0])
           .lte('date', viewDates.end.toIso8601String().split('T')[0])
-          .order('day_index', ascending: true);
+          .order('date', ascending: true);
 
       return response.map((json) => DailyMenuModel.fromJson(json)).toList();
     } catch (e) {

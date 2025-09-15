@@ -225,9 +225,9 @@ class DailyMenuCard extends StatelessWidget {
       case 6: // Viernes
         return const Color(0xFF5B6EDD);
       case 7: // Viernes
-        return const Color.fromARGB(255, 161, 69, 130);
+        return const Color(0xFFA14582);
       case 8: // Viernes
-        return const Color.fromARGB(255, 211, 209, 79);
+        return const Color(0xFFD3D14F);
       default:
         return Colors.grey;
     }

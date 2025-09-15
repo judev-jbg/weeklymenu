@@ -81,17 +81,7 @@ class DailyMenuModel {
 
   /// Obtiene el nombre del día de la semana en español
   String get dayName {
-    const days = [
-      'Sáb',
-      'Dom',
-      'Lun',
-      'Mar',
-      'Mié',
-      'Jue',
-      'Vie',
-      'Sáb',
-      'Dom'
-    ];
+    const days = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
     return days[dayIndex];
   }
 

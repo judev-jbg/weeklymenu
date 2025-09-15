@@ -141,14 +141,14 @@ BEGIN
         
         -- Crear 7 nuevos registros (lunes a domingo de la siguiente semana)
         FOR i IN 0..6 LOOP
-            new_day_index := i + 2; -- day_index: 2=lunes, 3=martes... 8=domingo
-            
+            new_day_index := i; -- day_index: 0=lunes, 1=martes... 6=domingo
+
             -- Solo crear si no existe ya un registro para esa fecha y day_index
             INSERT INTO daily_menus (
                 user_id,        -- NULL inicialmente
                 menu_id,        -- NULL inicialmente  
                 date,           -- Fecha específica
-                day_index,      -- 2-8 (lunes a domingo)
+                day_index,     -- 0-6 (lunes a domingo)
                 status,
                 order_position,
                 created_at,
@@ -166,8 +166,8 @@ BEGIN
             )
             ON CONFLICT (day_index, date) DO NOTHING; -- No duplicar si ya existe
         END LOOP;
-        
-        RAISE NOTICE 'Created new week: % to % (day_index 2-8)', 
+
+        RAISE NOTICE 'Created new week: % to % (day_index 0-6)', 
                      next_monday, next_monday + 6;
     ELSE
         RAISE NOTICE 'New week creation only runs on Fridays. Today is %', 

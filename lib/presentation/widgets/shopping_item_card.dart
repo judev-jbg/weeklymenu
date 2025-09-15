@@ -1,5 +1,6 @@
 // lib/presentation/widgets/shopping_item_card.dart
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../data/models/shopping_item_model.dart';
 
 /// Card que muestra un item de la lista de compras
@@ -19,7 +20,7 @@ class ShoppingItemCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       child: Dismissible(
         key: Key(item.id),
-        direction: DismissDirection.endToStart,
+        direction: DismissDirection.startToEnd,
         confirmDismiss: (direction) async {
           return await _showDeleteConfirmation(context);
         },
@@ -27,8 +28,8 @@ class ShoppingItemCard extends StatelessWidget {
           onRemove();
         },
         background: Container(
-          alignment: Alignment.centerRight,
-          padding: const EdgeInsets.only(right: 20),
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.only(left: 20),
           decoration: BoxDecoration(
             color: Colors.green,
             borderRadius: BorderRadius.circular(12),
@@ -86,6 +87,7 @@ class ShoppingItemCard extends StatelessWidget {
         return AlertDialog(
           title: const Text('Confirmar compra'),
           content: Text('¿Ya compraste ${item.ingredient.name}?'),
+          backgroundColor: Theme.of(Get.context!).cardTheme.color,
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
@@ -93,6 +95,8 @@ class ShoppingItemCard extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () => Navigator.of(context).pop(true),
+              style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.only(left: 15, right: 15)),
               child: const Text('Confirmar'),
             ),
           ],
